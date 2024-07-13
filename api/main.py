@@ -1,7 +1,7 @@
-from fastapi import FastAPI
 import random
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
 
 # List of inspirational phrases
 phrases = [
@@ -16,6 +16,20 @@ phrases = [
     {"phrase": "The only way to do great work is to love what you do.", "author": "Steve Jobs"},
     {"phrase": "If you want to lift yourself up, lift up someone else.", "author": "Booker T. Washington"}
 ]
+
+app = FastAPI()
+
+origins = [ 
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/inspire")
 def get_inspiration():
