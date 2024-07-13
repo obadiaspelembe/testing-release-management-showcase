@@ -160,3 +160,29 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+api/.virtualenv/lib64
+api/.virtualenv/pyvenv.cfg
+api/.virtualenv/bin/activate
+api/.virtualenv/bin/activate.csh
+api/.virtualenv/bin/activate.fish
+api/.virtualenv/bin/Activate.ps1
+api/.virtualenv/bin/dotenv
+api/.virtualenv/bin/email_validator
+api/.virtualenv/bin/fastapi
+api/.virtualenv/bin/httpx
+api/.virtualenv/bin/markdown-it
+api/.virtualenv/bin/pip
+api/.virtualenv/bin/pip3
+api/.virtualenv/bin/pip3.10
+api/.virtualenv/bin/pygmentize
+api/.virtualenv/bin/python
+api/.virtualenv/bin/python3
+api/.virtualenv/bin/python3.10
+api/.virtualenv/bin/typer
+api/.virtualenv/bin/uvicorn
+api/.virtualenv/bin/watchfiles
+api/.virtualenv/bin/coverage
+api/.virtualenv/bin/coverage-3.10
+api/.virtualenv/bin/coverage3
+api/.virtualenv/bin/py.test
+api/.virtualenv/bin/pytest
