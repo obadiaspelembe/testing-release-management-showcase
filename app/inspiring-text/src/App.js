@@ -21,15 +21,15 @@ const App = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="text-center bg-white p-10 shadow-lg rounded-lg">
         <h1 className="text-2xl font-bold mb-4">Inspiring Text Generator</h1>
+        <div className="m-4 text-gray-700 bg-sky-200 p-2">
+          <span class="italic decoration-solid">{text || 'Your text appear here'}</span>
+        </div>
         <button 
           onClick={handleClick} 
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           Click me
         </button>
-        <div className="mt-4 text-gray-700">
-          {text || 'Your text appear here'}
-        </div>
       </div>
     </div>
   );
