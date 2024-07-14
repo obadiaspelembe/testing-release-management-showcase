@@ -52,7 +52,7 @@ test-api:unittest:
   artifacts:
     reports:
       junit:
-        - app/report.xml
+        - api/report.xml
 
 test-api:coverage:
   stage: test:coverage
