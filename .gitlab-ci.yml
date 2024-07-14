@@ -22,6 +22,20 @@ build-web-app:
     paths:
       - app/node_modules/
 
+test-web-app:unittest:
+  stage: test:unittest
+  image: node:latest 
+  dependencies:
+    - build-web-app
+  script:
+    - cd app
+    - yarn test:unittest
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - app/reports/report.xml 
+
 test-web-app:coverage:
   stage: test:coverage
   image: node:latest 
@@ -32,9 +46,7 @@ test-web-app:coverage:
     - yarn test:coverage
   artifacts:
     when: always
-    reports:
-      junit:
-        - app/coverage/cobertura-coverage.xml
+    reports: 
       coverage_report:
         coverage_format: cobertura
         path: app/coverage/cobertura-coverage.xml

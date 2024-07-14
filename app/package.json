@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:coverage": "CI=true react-scripts test --env=jsdom --coverage"
+    "test:unittest": "react-app-rewired test --env=jsdom --coverage --watchAll=false",
+    "test:coverage": "JEST_CONFIG=jest.config.js CI=true react-scripts test --env=jsdom --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -38,9 +39,10 @@
   },
   "devDependencies": {
     "jest-junit": "^16.0.0",
+    "react-app-rewired": "^2.2.1",
     "tailwindcss": "^3.4.4"
   },
-  "jest": { 
+  "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!src/index.js",
