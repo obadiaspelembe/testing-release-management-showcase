@@ -2,11 +2,11 @@ variables:
   TF_GLOBAL_OPTIONS: -chdir=infrastructure
 
 stages:
-  - build
+  # - build
   - test
 
-test:
-  stage: test:api
+test-api:
+  stage: test
   image: python:3
   script:
     - cd api
