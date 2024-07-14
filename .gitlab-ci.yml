@@ -50,4 +50,4 @@ test-web-app:
         - app/coverage/cobertura-coverage.xml
       coverage_report:
         coverage_format: cobertura
-        path: coverage/cobertura-coverage.xml
+        path: app/coverage/cobertura-coverage.xml
