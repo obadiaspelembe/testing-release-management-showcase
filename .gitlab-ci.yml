@@ -49,7 +49,8 @@ test-api:unittest:
     - pip install -r requirements.txt
     - pip install -r test_requirements.txt
     - pytest --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
-  reports:
+  artifacts:
+    reports:
       junit:
         - app/report.xml
 
