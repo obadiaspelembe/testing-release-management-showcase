@@ -2,7 +2,7 @@ variables:
   TF_GLOBAL_OPTIONS: -chdir=infrastructure
 
 stages:
-  # - build
+  - build
   - test
 
 test-api:
@@ -18,3 +18,34 @@ test-api:
       coverage_report:
         coverage_format: cobertura
         path: api/coverage.xml
+  
+build:
+  stage: build
+  image: node:latest
+  script:
+    - cd app
+    - yarn
+  cache:
+    paths:
+      - app/node_modules/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - app/node_modules/
+
+test-app:
+  stage: test
+  image: node:latest
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  dependencies:
+    - build
+  script:
+    - cd app
+    - yarn test:ci
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - app/reports/junit.xml
+      cobertura: coverage/cobertura-coverage.xml
