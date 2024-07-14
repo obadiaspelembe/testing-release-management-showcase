@@ -47,7 +47,7 @@ test-app:
     when: always
     reports:
       junit:
-        - app/reports/junit.xml
+        - app/reports/coverage.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage/cobertura-coverage.xml
