@@ -1,0 +1,19 @@
+variables:
+  TF_GLOBAL_OPTIONS: -chdir=infrastructure
+
+stages:
+  - build
+  - test
+
+test:
+  stage: test:api
+  image: python:3
+  script:
+    - cd api
+    - pip install pytest pytest-cov
+    - pytest --cov --cov-report term --cov-report xml:coverage.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
