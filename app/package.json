@@ -15,7 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "JEST_JUNIT_OUTPUT_DIR=./reports JEST_JUNIT_OUTPUT_NAME=junit.xml react-scripts test --env=jsdom --reporters=jest-junit --reporters=default",
+    "test:ci": "JEST_JUNIT_OUTPUT_DIR=./reports JEST_JUNIT_OUTPUT_NAME=coverage.xml react-scripts test --env=jsdom --reporters=jest-junit --reporters=default  --watchAll=false", 
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
