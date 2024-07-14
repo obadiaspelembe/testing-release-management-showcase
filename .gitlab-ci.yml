@@ -19,7 +19,7 @@ test-api:
         coverage_format: cobertura
         path: api/coverage.xml
   
-build:
+build-web-app:
   stage: build
   image: node:latest
   script:
@@ -34,7 +34,7 @@ build:
     paths:
       - app/node_modules/
 
-test-app:
+test-web-app:
   stage: test
   image: node:latest
   # coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
@@ -42,7 +42,7 @@ test-app:
     - build
   script:
     - cd app
-    - yarn test:ci
+    - yarn test:coverage
   artifacts:
     when: always
     reports:
