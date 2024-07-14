@@ -39,7 +39,7 @@ test-web-app:
   image: node:latest
   # coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
-    - build
+    - build-web-app
   script:
     - cd app
     - yarn test:coverage
