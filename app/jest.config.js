@@ -1,5 +1,11 @@
 module.exports = {
-  coverageReporters: ["html", "text", "text-summary", "cobertura"],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "src/**/*.{js,jsx}",
+    "!src/index.js",
+    "!src/reportWebVitals.js"
+  ],
+  coverageReporters: ['text', 'cobertura'],
   reporters: [
     'default',
     [
