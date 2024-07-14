@@ -1,0 +1,32 @@
+variables:
+  TF_GLOBAL_OPTIONS: -chdir=infrastructure
+
+stages:
+  - terraform-plan
+  - terraform-apply
+  - terraform-destroy
+  - ansible-deploy
+
+.base-init:
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    # - ssh-keyscan -H linode.server.ip >> ~/.ssh/known_hosts
+    - terraform -chdir="infrastructure" init -backend-config="address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase" -backend-config="lock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase/lock"  -backend-config="unlock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase/lock" -backend-config="username=${GITLAB_USER_ID}" -backend-config="password=${GITLAB_TOKEN_CI}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" 
+
+terraform-plan:
+  extends: .base-init
+  image: 
+    name: hashicorp/terraform:1.8
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  stage: terraform-plan
+  script:
+    - terraform -chdir="infrastructure" plan -out "plan.tfplan"
+  artifacts:
+    paths:
+      - "infrastructure/plan.tfplan"
