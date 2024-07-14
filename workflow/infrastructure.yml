@@ -1,21 +1,9 @@
 variables:
   TF_GLOBAL_OPTIONS: -chdir=infrastructure
 
-stages:
-  - terraform-plan
-  - terraform-apply
-  - terraform-destroy
-  - ansible-deploy
-
 .base-init:
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    # - ssh-keyscan -H linode.server.ip >> ~/.ssh/known_hosts
-    - terraform -chdir="infrastructure" init -backend-config="address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase" -backend-config="lock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase/lock"  -backend-config="unlock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase/lock" -backend-config="username=${GITLAB_USER_ID}" -backend-config="password=${GITLAB_TOKEN_CI}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" 
+  before_script: 
+    - terraform -chdir="infrastructure" init -backend-config="address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/terraform/state/zabbix-in-linode" -backend-config="lock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/terraform/state/zabbix-in-linode/lock"  -backend-config="unlock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/terraform/state/zabbix-in-linode/lock" -backend-config="username=${GITLAB_USER_ID}" -backend-config="password=${GITLAB_TOKEN_CI}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" 
 
 terraform-plan:
   extends: .base-init
@@ -30,3 +18,51 @@ terraform-plan:
   artifacts:
     paths:
       - "infrastructure/plan.tfplan"
+
+terraform-apply:
+  extends: .base-init
+  image:  
+    name: hashicorp/terraform:1.8
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  stage: terraform-apply
+  script:  
+    - terraform -chdir="infrastructure" apply -auto-approve "plan.tfplan"  
+    - terraform -chdir="infrastructure" output -raw server_host >> .server_host 
+    - echo "linode_server ansible_host=$(eval cat .server_host)" >> hosts
+    - echo "LINODE_PASSWORD=$(eval terraform -chdir="infrastructure" output -raw linode_password)" >> build.env
+  when: manual
+  artifacts:
+    reports:
+      dotenv: build.env
+    paths:
+      - "infrastructure/plan.tfplan"
+      - "hosts"
+
+terraform-destroy:
+  extends: .base-init
+  stage: terraform-destroy
+  image:  
+    name: hashicorp/terraform:1.8
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - terraform -chdir="infrastructure" destroy -auto-approve 
+  when: manual
+
+# ansible-deploy:
+#   stage: ansible-deploy
+#   image:
+#     name: jfxs/ansible 
+#   needs:
+#     - terraform-apply
+#   variables:
+#     ANSIBLE_HOST_KEY_CHECKING: "False"
+#   when: manual
+#   script: 
+#     - ansible --version
+#     - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
+
+
