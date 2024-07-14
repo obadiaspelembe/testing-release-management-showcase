@@ -34,7 +34,7 @@ test-web-app:unittest:
     when: always
     reports:
       junit:
-        - app/reports/report.xml 
+        - app/reports/junit.xml 
 
 test-web-app:coverage:
   stage: test:coverage
