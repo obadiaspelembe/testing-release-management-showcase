@@ -37,7 +37,7 @@ build:
 test-app:
   stage: test
   image: node:latest
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  # coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
     - build
   script:
