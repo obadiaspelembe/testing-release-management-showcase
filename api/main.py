@@ -1,4 +1,5 @@
 import random
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,8 +20,10 @@ phrases = [
 
 app = FastAPI()
 
+APP_URL = os.environ.get("APP_URL", "http://localhost:3000")
+
 origins = [ 
-    "http://localhost:3000",
+    APP_URL,
 ]
 
 app.add_middleware(

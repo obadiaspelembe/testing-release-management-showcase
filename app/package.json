@@ -15,8 +15,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "JEST_JUNIT_OUTPUT_DIR=./reports JEST_JUNIT_OUTPUT_NAME=junit.xml react-scripts test --env=jsdom --reporters=jest-junit --reporters=default",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test:unittest": "react-app-rewired test --env=jsdom --coverage --watchAll=false",
+    "test:coverage": "JEST_CONFIG=jest.config.js CI=true react-scripts test --env=jsdom --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -38,6 +39,18 @@
   },
   "devDependencies": {
     "jest-junit": "^16.0.0",
+    "react-app-rewired": "^2.2.1",
     "tailwindcss": "^3.4.4"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js",
+      "!src/reportWebVitals.js"
+    ],
+    "coverageReporters": [
+      "text",
+      "cobertura"
+    ]
   }
 }
