@@ -4,15 +4,16 @@ variables:
 
 .base-init:
   before_script: 
-    - terraform -chdir="infrastructure" init \
-      -backend-config="address=${TF_GITLAB_URL}" \ 
-      -backend-config="lock_address=${TF_GITLAB_URL}/lock" \
-      -backend-config="unlock_address=${TF_GITLAB_URL}/lock" \
-      -backend-config="username=${GITLAB_USER_ID}" \
-      -backend-config="password=${GITLAB_TOKEN_CI}" \
-      -backend-config="lock_method=POST" \
-      -backend-config="unlock_method=DELETE" \
-      -backend-config="retry_wait_min=5" 
+    - |
+      terraform -chdir="infrastructure" init \
+        -backend-config="address=${TF_GITLAB_URL}" \ 
+        -backend-config="lock_address=${TF_GITLAB_URL}/lock" \
+        -backend-config="unlock_address=${TF_GITLAB_URL}/lock" \
+        -backend-config="username=${GITLAB_USER_ID}" \
+        -backend-config="password=${GITLAB_TOKEN_CI}" \
+        -backend-config="lock_method=POST" \
+        -backend-config="unlock_method=DELETE" \
+        -backend-config="retry_wait_min=5" 
 
 terraform-plan:
   extends: .base-init
