@@ -14,6 +14,8 @@ variables:
     - chmod 600 ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa.pub
     - whoami
+    - cd ~
+    - pwd
 
 
 terraform-plan:
@@ -74,7 +76,8 @@ ansible-deploy:
     ANSIBLE_HOST_KEY_CHECKING: "False"
   when: manual
   script: 
-    - ansible --version
+    - echo $LINODE_PASSWORD
     - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
+  
 
 
