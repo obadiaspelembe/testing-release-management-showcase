@@ -8,7 +8,8 @@ variables:
 
 .base-ssh:
   before_script: 
-    - mkdir ~/.ssh
+    # - mkdir ~/.ssh
+    - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     # - echo $SSH_PRIVATE_RSA > ~/.ssh/id_rsa
     # - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
