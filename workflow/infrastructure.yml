@@ -13,9 +13,6 @@ variables:
     - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
     - chmod 600 ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa.pub
-    - whoami
-    - cd ~
-    - pwd
 
 
 terraform-plan:
@@ -45,6 +42,7 @@ terraform-apply:
     - terraform -chdir="infrastructure" output -raw server_host >> .server_host 
     - echo "linode_server ansible_host=$(eval cat .server_host)" >> hosts
     - echo "LINODE_PASSWORD=$(eval terraform -chdir="infrastructure" output -raw linode_password)" >> build.env
+    - echo "SERVER_HOST=$(eval terraform -chdir="infrastructure" output -raw server_host)" >> build.env
   when: manual
   artifacts:
     reports:
@@ -76,7 +74,6 @@ ansible-deploy:
     ANSIBLE_HOST_KEY_CHECKING: "False"
   when: manual
   script: 
-    - echo $LINODE_PASSWORD
     - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
   
 
