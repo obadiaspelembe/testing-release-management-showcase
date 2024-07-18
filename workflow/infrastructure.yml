@@ -1,9 +1,19 @@
 variables:
   TF_GLOBAL_OPTIONS: -chdir=infrastructure
+  TF_GITLAB_URL: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/experiments2172815/testing-in-release-management-showcase"
 
 .base-init:
   before_script: 
-    - terraform -chdir="infrastructure" init -backend-config="address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase" -backend-config="lock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase/lock"  -backend-config="unlock_address=https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/experiments2172815/testing-in-release-management-showcase/lock" -backend-config="username=${GITLAB_USER_ID}" -backend-config="password=${GITLAB_TOKEN_CI}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" 
+    - | 
+    terraform -chdir="infrastructure" init \
+    -backend-config="address=${TF_GITLAB_URL}" \ 
+    -backend-config="lock_address=${TF_GITLAB_URL}/lock" \
+    -backend-config="unlock_address=${TF_GITLAB_URL}/lock" \
+    -backend-config="username=${GITLAB_USER_ID}" \
+    -backend-config="password=${GITLAB_TOKEN_CI}" \
+    -backend-config="lock_method=POST" \
+    -backend-config="unlock_method=DELETE" \
+    -backend-config="retry_wait_min=5" 
 
 terraform-plan:
   extends: .base-init
