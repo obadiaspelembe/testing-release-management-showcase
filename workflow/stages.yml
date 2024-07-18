@@ -5,4 +5,4 @@ stages:
   - terraform-plan
   - terraform-apply
   - terraform-destroy
-  # - ansible-deploy
+  - ansible-deploy
