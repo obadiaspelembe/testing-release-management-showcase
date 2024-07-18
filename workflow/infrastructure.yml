@@ -1,6 +1,6 @@
 variables:
   TF_GLOBAL_OPTIONS: -chdir=infrastructure
-  TF_GITLAB_URL: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/experiments2172815/testing-in-release-management-showcase/terraform-state/"
+  TF_GITLAB_URL: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/testing-in-release-management-showcase"
 
 .base-init:
   before_script: 
