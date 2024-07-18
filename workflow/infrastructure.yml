@@ -61,7 +61,7 @@ terraform-destroy:
 
 ansible-deploy:
   stage: ansible-deploy
-  extends: .base-init
+  extends: .base-ssh
   image:
     name: jfxs/ansible 
   needs:
