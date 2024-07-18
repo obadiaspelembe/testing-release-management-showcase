@@ -16,8 +16,6 @@ variables:
     # - cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
     # - chmod 600 ~/.ssh/id_rsa
     # - chmod 600 ~/.ssh/id_rsa.pub
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client wget gnupg -y )'
-    - wget -qO- https://get.docker.com/gpg | apt-key add -
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
