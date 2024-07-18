@@ -1,0 +1,47 @@
+- name: Inspiring text server setup
+  hosts: all
+  remote_user: root
+  become: true
+
+  tasks:
+    - name: Install Aptitude via apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+    
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./app
+        dest: /www/var/zabbix 
+
+    - name: Install docker-compose 
+      get_url: 
+        url : https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+    
+    - name: Run container
+      become: True
+      shell:
+        cmd: "cd /www/var/zabbix/app && docker compose up -d"
+        chdir: /www/var/zabbix/app
+        
