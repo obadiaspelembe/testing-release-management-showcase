@@ -15,7 +15,7 @@ terraform-plan:
   stage: terraform-plan
   script:
     - ls -l -a infrastructure/
-    - terraform -chdir="infrastructure" plan -out "plan.tfplan"
+    - terraform -chdir="infrastructure" plan  -lock=false -out "plan.tfplan"
   artifacts:
     paths:
       - "infrastructure/plan.tfplan"
