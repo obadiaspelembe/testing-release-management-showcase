@@ -9,10 +9,11 @@ variables:
 .base-ssh:
   before_script: 
     - mkdir ~/.ssh
-    - echo $SSH_PRIVATE_RSA > ~/.ssh/id_rsa
-    - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
-    - chmod 600 ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa.pub
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    # - echo $SSH_PRIVATE_RSA > ~/.ssh/id_rsa
+    # - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
+    # - chmod 600 ~/.ssh/id_rsa
+    # - chmod 600 ~/.ssh/id_rsa.pub
 
 
 terraform-plan:
