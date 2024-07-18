@@ -6,6 +6,12 @@ variables:
   before_script: 
     - terraform -chdir="infrastructure" init -backend-config="address=${TF_GITLAB_URL}" -backend-config="lock_address=${TF_GITLAB_URL}/lock" -backend-config="unlock_address=${TF_GITLAB_URL}/lock" -backend-config="username=${GITLAB_USER_ID}" -backend-config="password=${GITLAB_TOKEN_CI}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" 
 
+.base-ssh:
+  before_script: 
+    - mkdir ~/.ssh
+    - echo $SSH_PRIVATE_RSA > ~/.ssh/id_rsa
+
+
 terraform-plan:
   extends: .base-init
   image: 
@@ -15,7 +21,6 @@ terraform-plan:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   stage: terraform-plan
   script:
-    - ls -l -a infrastructure/
     - terraform -chdir="infrastructure" plan -out "plan.tfplan"
   artifacts:
     paths:
@@ -54,17 +59,18 @@ terraform-destroy:
     - terraform -chdir="infrastructure" destroy -auto-approve 
   when: manual
 
-# ansible-deploy:
-#   stage: ansible-deploy
-#   image:
-#     name: jfxs/ansible 
-#   needs:
-#     - terraform-apply
-#   variables:
-#     ANSIBLE_HOST_KEY_CHECKING: "False"
-#   when: manual
-#   script: 
-#     - ansible --version
-#     - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
+ansible-deploy:
+  stage: ansible-deploy
+  extends: .base-init
+  image:
+    name: jfxs/ansible 
+  needs:
+    - terraform-apply
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  when: manual
+  script: 
+    - ansible --version
+    - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
 
 
