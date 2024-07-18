@@ -14,7 +14,7 @@ terraform-plan:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   stage: terraform-plan
   script:
-    - ls infrastructure/
+    - ls -l -a infrastructure/
     - terraform -chdir="infrastructure" plan -out "plan.tfplan"
   artifacts:
     paths:
