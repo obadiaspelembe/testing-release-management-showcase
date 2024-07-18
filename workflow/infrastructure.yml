@@ -4,7 +4,7 @@ variables:
 
 .base-init:
   before_script: 
-    - | terraform -chdir="infrastructure" init \
+    - terraform -chdir="infrastructure" init \
       -backend-config="address=${TF_GITLAB_URL}" \ 
       -backend-config="lock_address=${TF_GITLAB_URL}/lock" \
       -backend-config="unlock_address=${TF_GITLAB_URL}/lock" \
