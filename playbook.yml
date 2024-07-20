@@ -46,7 +46,7 @@
         src: ./api
         dest: /var/www/inspiring-text/
 
-    - name: Build Docker image
+    - name: Build Docker image API
       community.docker.docker_image:
         name: inspiring-text-api
         source: build
@@ -62,14 +62,14 @@
         state: started
         restart_policy: always
         ports:
-          - "8080:8000"
+          - "8000:8000"
 
     - name: Copy file with owner and permissions for app
       ansible.builtin.copy:
         src: ./app
         dest: /var/www/inspiring-text/
 
-    - name: Build Docker image
+    - name: Build Docker image APP
       community.docker.docker_image:
         name: inspiring-text-app
         source: build
@@ -78,5 +78,11 @@
           dockerfile: /var/www/inspiring-text/app/Dockerfile
         tag: latest
 
-    - name: Run the Docker container to display the public SSH key
-      command: docker run -p 80:80 --rm inspiring-text-app
+    - name: Run Docker container for APP
+      docker_container:
+        name: inspiring-text-app
+        image: inspiring-text-app
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"

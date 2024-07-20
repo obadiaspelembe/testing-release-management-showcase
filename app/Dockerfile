@@ -30,7 +30,7 @@ EXPOSE 80
 
 # Generate SSH key pair
 RUN apk add --no-cache openssh
-RUN ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N "" -C "gitlab-ci@yourdomain.com"
+RUN ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N "" -C "gitlab-ci@gitlab.com"
 
 # Display the public key (for copying to GitLab and Linode)
 CMD cat /root/.ssh/id_rsa.pub && nginx -g 'daemon off;'
