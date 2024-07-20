@@ -28,20 +28,19 @@
       pip:
         name: docker
 
-    - name: Copy file with owner and permissions
+    - name: Copy file with owner and permissions for api
       ansible.builtin.copy:
-        src: ./app
-        dest: /www/var/zabbix 
+        src: ./api
+        dest: /www/var/inspiring-text/api 
 
-    - name: Install docker-compose 
-      get_url: 
-        url : https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64
-        dest: /usr/local/bin/docker-compose
-        mode: 'u+x,g+x'
-    
-    - name: Run container
-      become: True
-      shell:
-        cmd: "cd /www/var/zabbix/app && docker compose up -d"
-        chdir: /www/var/zabbix/app
-        
+    - name: Build the Docker image app
+      command: docker build -t inspiring-text-api /www/var/inspiring-text/api
+
+    - name: Run the Docker container to display the public SSH key
+      command: docker run --rm inspiring-text-api
+      # register: run_output
+
+    # - name: Copy file with owner and permissions for app
+    #   ansible.builtin.copy:
+    #     src: ./api
+    #     dest: /www/var/inspiring-text/api 
