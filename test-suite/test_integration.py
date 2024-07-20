@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 
-APP_URL = os.environ.get("http://69.164.202.113")
+APP_URL = "http://69.164.202.113" #os.environ.get("APP_URL")
 
 @pytest.fixture(scope="module")
 def driver():
@@ -20,7 +20,7 @@ def driver():
 
 
     driver = webdriver.Remote(
-        command_executor='http://selenium:4444/wd/hub',
+        command_executor='http://localhost:4444/wd/hub',
         options=chrome_options
     )
     
