@@ -89,6 +89,7 @@ ansible-deploy:
     ANSIBLE_HOST_KEY_CHECKING: "False"
   when: manual
   script: 
+    - echo "REACT_APP_API_URL=http://$SERVER_HOST:8000" > app/.env
     - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
   
 
