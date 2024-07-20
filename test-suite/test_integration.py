@@ -5,13 +5,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 
 APP_URL = os.environ.get("APP_URL", "http://localhost:3000")
 
 @pytest.fixture(scope="module")
 def driver():
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless") 
+    
+    driver = webdriver.Chrome(options=chrome_options) 
     yield driver
     driver.quit()
 
