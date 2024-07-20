@@ -1,5 +1,5 @@
-test-integration:webapp:
-  stage: test:integration
+test-suite:webapp:
+  stage: test:suite
   image: python:3
   needs:
     - terraform-apply
