@@ -8,22 +8,22 @@ variables:
 
 .base-ssh:
   before_script: 
-    # - mkdir ~/.ssh
-    # # - eval $(ssh-agent -s)
-    # # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    # - echo $SSH_PRIVATE_RSA > ~/.ssh/id_rsa
+    - mkdir ~/.ssh
+    # - eval $(ssh-agent -s)
+    # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - echo $SSH_PRIVATE_RSA > ~/.ssh/id_rsa
     # - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
     # - cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-    # - chmod 600 ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
     # - chmod 600 ~/.ssh/id_rsa.pub
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - touch ~/.ssh/config
-    - touch ~/.ssh/known_hosts
-    - chmod -R 400 ~/.ssh
-    - echo $SERVER_HOST >> ~/.ssh/known_hosts
-    - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    # - eval $(ssh-agent -s)
+    # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    # - mkdir -p ~/.ssh
+    # - touch ~/.ssh/config
+    # - touch ~/.ssh/known_hosts
+    # - chmod -R 400 ~/.ssh
+    # - echo $SERVER_HOST >> ~/.ssh/known_hosts
+    # - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
 
 
@@ -86,7 +86,7 @@ ansible-deploy:
     ANSIBLE_HOST_KEY_CHECKING: "False"
   when: manual
   script: 
-    - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
+    - ansible-playbook -u root --private-key=~/.ssh/id_rsa -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
   
 
 
