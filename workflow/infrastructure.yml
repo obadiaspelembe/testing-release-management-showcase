@@ -8,15 +8,15 @@ variables:
 
 .base-ssh:
   before_script: 
-    - mkdir ~/.ssh
-    # - eval $(ssh-agent -s)
-    # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - echo $SSH_PRIVATE_KEY | tr ' ' '\n' | tail -n+5 | head -n-4 #>> ~/.ssh/id_rsa
-    - cat ~/.ssh/id_rsa
+    # - mkdir ~/.ssh
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_RSA" | tr -d '\r' | ssh-add -
+    # - echo "$SSH_PRIVATE_RSA" | tr -d '\r' > ~/.ssh/id_rsa
+    # - echo $SSH_PRIVATE_KEY | tr ' ' '\n' | tail -n+5 | head -n-4 #>> ~/.ssh/id_rsa
+    # - cat ~/.ssh/id_rsa
     # - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
     # - cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-    - chmod 600 ~/.ssh/id_rsa
+    # - chmod 600 ~/.ssh/id_rsa
     # - chmod 600 ~/.ssh/id_rsa.pub
     # - eval $(ssh-agent -s)
     # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
