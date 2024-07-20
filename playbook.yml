@@ -31,10 +31,6 @@
         state: latest
         name: python3-pip
 
-    # - name: Install Docker module for Python
-    #   ansible.builtin.pip:
-    #     name: docker
-
     - name: Ensure Python venv is present
       ansible.builtin.command: python3 -m venv /var/www/inspiring-text-venv/
       args:
@@ -61,7 +57,7 @@
 
     - name: Run the Docker container to display the public SSH key
       command: docker run -p 8000:8000 --rm inspiring-text-api
-      register: run_output 
+      # register: run_output 
 
     - name: Copy file with owner and permissions for app
       ansible.builtin.copy:
@@ -79,4 +75,4 @@
 
     - name: Run the Docker container to display the public SSH key
       command: docker run -p 80:80 --rm inspiring-text-app
-      register: run_output 
+      # register: run_output 
