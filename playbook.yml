@@ -36,22 +36,22 @@
     #     name: docker
 
     - name: Ensure Python venv is present
-      ansible.builtin.command: python3 -m venv /www/var/inspiring-text-venv/
+      ansible.builtin.command: python3 -m venv /var/www/inspiring-text-venv/
       args:
-        creates: /path/to/venv
+        creates: /var/www/inspiring-text-venv/
 
     - name: Install Docker module in venv
-      ansible.builtin.command: /www/var/inspiring-text-venv/bin/pip install docker
+      ansible.builtin.command: /var/www/inspiring-text-venv/bin/pip install docker
       environment:
-        PATH: "/www/var/inspiring-text-venv/bin:{{ ansible_env.PATH }}"
+        PATH: "/var/www/inspiring-text-venv//bin:{{ ansible_env.PATH }}"
 
     - name: Copy file with owner and permissions for api
       ansible.builtin.copy:
         src: ./api
-        dest: /www/var/inspiring-text/api 
+        dest: /var/www/inspiring-text/api 
 
     - name: Build the Docker image app
-      command: cd /www/var/inspiring-text/api && ls && docker build -t inspiring-text-api . #/www/var/inspiring-text/api
+      command: cd /var/www/inspiring-text/api && ls && docker build -t inspiring-text-api . #/www/var/inspiring-text/api
     # - name: Build Docker image
     #   community.docker.docker_image:
     #     name: inspiring-text-api
