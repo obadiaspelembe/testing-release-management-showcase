@@ -1,0 +1,9 @@
+stages:
+  - build
+  - test:unittest
+  - test:coverage
+  - terraform-plan
+  - terraform-apply
+  - ansible-deploy
+  - terraform-destroy
+  - test:suite

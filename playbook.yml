@@ -1,0 +1,91 @@
+- name: Inspiring text server setup
+  hosts: all
+  remote_user: root
+  become: true
+
+  tasks:
+    - name: Install Aptitude via apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+    
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'python3-venv','virtualenv', 'python3-setuptools']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+  
+    - name: install python dependencies
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name: python3-pip
+
+    - name: Ensure Python venv is present
+      ansible.builtin.command: python3 -m venv /var/www/inspiring-text-venv/
+      args:
+        creates: /var/www/inspiring-text-venv/
+
+    - name: Install Docker module in venv
+      ansible.builtin.command: /var/www/inspiring-text-venv/bin/pip install docker
+      environment:
+        PATH: "/var/www/inspiring-text-venv//bin:{{ ansible_env.PATH }}"
+
+    - name: Copy file with owner and permissions for api
+      ansible.builtin.copy:
+        src: ./api
+        dest: /var/www/inspiring-text/
+
+    - name: Build Docker image API
+      community.docker.docker_image:
+        name: inspiring-text-api
+        source: build
+        build:
+          path: /var/www/inspiring-text/api
+          dockerfile: /var/www/inspiring-text/api/Dockerfile
+        tag: latest
+
+    - name: Run Docker container for API
+      docker_container:
+        name: inspiring-text-api
+        image: inspiring-text-api
+        state: started
+        restart_policy: always
+        ports:
+          - "8000:8000"
+        env:
+          APP_URL: "{{ server_url }}"
+
+    - name: Copy file with owner and permissions for app
+      ansible.builtin.copy:
+        src: ./app
+        dest: /var/www/inspiring-text/
+
+    - name: Build Docker image APP
+      community.docker.docker_image:
+        name: inspiring-text-app
+        source: build
+        build:
+          path: /var/www/inspiring-text/app
+          dockerfile: /var/www/inspiring-text/app/Dockerfile
+        tag: latest
+
+    - name: Run Docker container for APP
+      docker_container:
+        name: inspiring-text-app
+        image: inspiring-text-app
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"
+        

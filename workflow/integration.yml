@@ -1,0 +1,17 @@
+test-suite:webapp:
+  stage: test:suite
+  image: python:3
+  services:
+    - name: selenium/standalone-chrome
+      alias: selenium
+  needs:
+    - terraform-apply
+  script:
+    - cd test-suite
+    - pip install -r requirements.txt
+    - export APP_URL="http://$SERVER_HOST"
+    - pytest --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
+  artifacts:
+    reports:
+      junit:
+        - test-suite/report.xml

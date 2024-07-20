@@ -1,0 +1,73 @@
+# web-app jobs  
+build-web-app:
+  stage: build
+  image: node:latest
+  script:
+    - cd app
+    - yarn
+  cache:
+    paths:
+      - app/node_modules/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - app/node_modules/
+
+test-web-app:unittest:
+  stage: test:unittest
+  image: node:latest 
+  dependencies:
+    - build-web-app
+  script:
+    - cd app
+    - yarn test:unittest
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - app/reports/junit.xml 
+
+test-web-app:coverage:
+  stage: test:coverage
+  image: node:latest 
+  dependencies:
+    - build-web-app
+  script:
+    - cd app
+    - yarn test:coverage
+  artifacts:
+    when: always
+    reports: 
+      coverage_report:
+        coverage_format: cobertura
+        path: app/coverage/cobertura-coverage.xml
+
+
+# api jobs
+test-api:unittest:
+  stage: test:unittest
+  image: python:3
+  script:
+    - cd api
+    - pip install -r requirements.txt
+    - pip install -r test_requirements.txt
+    - pytest --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
+  artifacts:
+    reports:
+      junit:
+        - api/report.xml
+
+test-api:coverage:
+  stage: test:coverage
+  image: python:3
+  script:
+    - cd api
+    - pip install -r requirements.txt
+    - pip install -r test_requirements.txt
+    - pytest --cov --cov-report term --cov-report xml:coverage.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: api/coverage.xml

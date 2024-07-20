@@ -1,0 +1,96 @@
+variables:
+  TF_GLOBAL_OPTIONS: -chdir=infrastructure
+  TF_GITLAB_URL: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/testing-in-release-management-showcase"
+
+.base-init:
+  before_script: 
+    - terraform -chdir="infrastructure" init -backend-config="address=${TF_GITLAB_URL}" -backend-config="lock_address=${TF_GITLAB_URL}/lock" -backend-config="unlock_address=${TF_GITLAB_URL}/lock" -backend-config="username=${GITLAB_USER_ID}" -backend-config="password=${GITLAB_TOKEN_CI}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" 
+
+.base-ssh:
+  before_script: 
+    # - mkdir ~/.ssh
+    - echo $LINODE_PASSWORD
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_RSA" | tr -d '\r' | ssh-add -
+    # - echo "$SSH_PRIVATE_RSA" | tr -d '\r' > ~/.ssh/id_rsa
+    # - echo $SSH_PRIVATE_KEY | tr ' ' '\n' | tail -n+5 | head -n-4 #>> ~/.ssh/id_rsa
+    # - cat ~/.ssh/id_rsa
+    # - echo $TF_VAR_linode_public_keys > ~/.ssh/id_rsa.pub
+    # - cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+    # - chmod 600 ~/.ssh/id_rsa
+    # - chmod 600 ~/.ssh/id_rsa.pub
+    # - eval $(ssh-agent -s)
+    # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    # - mkdir -p ~/.ssh
+    # - touch ~/.ssh/config
+    # - touch ~/.ssh/known_hosts
+    # - chmod -R 400 ~/.ssh
+    # - echo $SERVER_HOST >> ~/.ssh/known_hosts
+    # - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+
+
+terraform-plan:
+  extends: .base-init
+  image: 
+    name: hashicorp/terraform:1.8
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  stage: terraform-plan
+  script:
+    - terraform -chdir="infrastructure" plan -out "plan.tfplan"
+  artifacts:
+    paths:
+      - "infrastructure/plan.tfplan"
+
+terraform-apply:
+  extends: .base-init
+  image:  
+    name: hashicorp/terraform:1.8
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  stage: terraform-apply
+  script:  
+    - terraform -chdir="infrastructure" apply -auto-approve "plan.tfplan"  
+    - terraform -chdir="infrastructure" output -raw server_host >> .server_host 
+    - echo "linode_server ansible_host=$(eval cat .server_host)" >> hosts
+    - echo "LINODE_PASSWORD=$(eval terraform -chdir="infrastructure" output -raw linode_password)" >> build.env
+    - echo "SERVER_HOST=$(eval terraform -chdir="infrastructure" output -raw server_host)" >> build.env
+  when: manual
+  artifacts:
+    reports:
+      dotenv: build.env
+    paths:
+      - "infrastructure/plan.tfplan"
+      - "hosts"
+
+terraform-destroy:
+  extends: .base-init
+  stage: terraform-destroy
+  image:  
+    name: hashicorp/terraform:1.8
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - terraform -chdir="infrastructure" destroy -auto-approve 
+  when: manual
+
+ansible-deploy:
+  stage: ansible-deploy
+  extends: .base-ssh
+  image:
+    name: jfxs/ansible 
+  needs:
+    - terraform-apply
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  when: manual
+  script: 
+    - echo "REACT_APP_API_URL=http://$SERVER_HOST:8000" > app/.env
+    - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml --extra-vars="server_url=http://$SERVER_HOST"
+  
+
+
