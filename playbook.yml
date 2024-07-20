@@ -54,8 +54,9 @@
       community.docker.docker_image:
         name: inspiring-text-api
         source: build
-        path: /www/var/inspiring-text/api
-        dockerfile: /www/var/inspiring-text/api/Dockerfile
+        build:
+          path: /www/var/inspiring-text/api
+          dockerfile: /www/var/inspiring-text/api/Dockerfile
         tag: latest
 
     # - name: Run the Docker container to display the public SSH key
