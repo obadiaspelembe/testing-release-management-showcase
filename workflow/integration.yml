@@ -7,11 +7,9 @@ test-suite:webapp:
   needs:
     - terraform-apply
   script:
-    - apt-get update && apt-get install -y chromium-driver chromium
     - cd test-suite
     - pip install -r requirements.txt
     - export APP_URL="http://$SERVER_HOST"
-    - echo $APP_URL
     - pytest --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
   artifacts:
     reports:

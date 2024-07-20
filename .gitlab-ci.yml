@@ -1,5 +1,5 @@
 include:
   - workflow/stages.yml
-  # - workflow/build.yml
+  - workflow/build.yml
   - workflow/infrastructure.yml
   - workflow/integration.yml
