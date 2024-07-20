@@ -55,9 +55,30 @@
           dockerfile: /var/www/inspiring-text/api/Dockerfile
         tag: latest
 
-    - name: Run the Docker container to display the public SSH key
-      command: docker run -p 8000:8000 --rm inspiring-text-api
+    # - name: Run the Docker container to display the public SSH key
+    #   command: docker run -p 8000:8000 --rm inspiring-text-api
       # register: run_output 
+
+    - name: Check for existing container using the port 8000
+      command: docker ps --filter "publish=8000" --format "{{.Names}}"
+      register: existing_containers
+      ignore_errors: yes
+
+    - name: Stop and remove existing container
+      docker_container:
+        name: "{{ item }}"
+        state: absent
+      with_items: "{{ existing_containers.stdout_lines }}"
+      when: existing_containers.stdout_lines
+
+    - name: Run Docker container for API
+      docker_container:
+        name: inspiring-text-api
+        image: inspiring-text-api
+        state: started
+        restart_policy: always
+        ports:
+          - "8080:8000"
 
     - name: Copy file with owner and permissions for app
       ansible.builtin.copy:

@@ -4,5 +4,5 @@ stages:
   - test:coverage
   - terraform-plan
   - terraform-apply
-  - terraform-destroy
   - ansible-deploy
+  - terraform-destroy
