@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 
-APP_URL = "http://69.164.202.113" #os.environ.get("APP_URL")
+APP_URL =os.environ.get("APP_URL")
 
 @pytest.fixture(scope="module")
 def driver():
