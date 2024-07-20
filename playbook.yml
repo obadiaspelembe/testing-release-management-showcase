@@ -31,8 +31,8 @@
         state: latest
         name: python3-pip
 
-    - name: Install Docker Module for Python
-      pip:
+    - name: Install Docker module for Python
+      ansible.builtin.pip:
         name: docker
 
     - name: Copy file with owner and permissions for api
