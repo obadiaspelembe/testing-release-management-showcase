@@ -63,6 +63,8 @@
         restart_policy: always
         ports:
           - "8000:8000"
+        env:
+          APP_URL: "{{ server_url }}"
 
     - name: Copy file with owner and permissions for app
       ansible.builtin.copy:
@@ -86,3 +88,4 @@
         restart_policy: always
         ports:
           - "80:80"
+        
