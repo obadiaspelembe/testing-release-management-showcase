@@ -6,3 +6,4 @@ stages:
   - terraform-apply
   - ansible-deploy
   - terraform-destroy
+  - test:suite

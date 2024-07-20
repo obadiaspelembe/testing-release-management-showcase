@@ -1,0 +1,14 @@
+test-integration:webapp:
+  stage: test:integration
+  image: python:3
+  needs:
+    - terraform-apply
+  script:
+    - cd test-suite
+    - pip install -r requirements.txt
+    - export APP_URL=$SERVER_HOST
+    - pytest --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
+  artifacts:
+    reports:
+      junit:
+        - test-suite/report.xml
