@@ -59,9 +59,9 @@
           dockerfile: /var/www/inspiring-text/api/Dockerfile
         tag: latest
 
-    # - name: Run the Docker container to display the public SSH key
-    #   command: docker run -p 8000:8000 --rm inspiring-text-api
-      # register: run_output
+    - name: Run the Docker container to display the public SSH key
+      command: docker run -p 8000:8000 --rm inspiring-text-api
+      register: run_output
 
     # - name: Copy file with owner and permissions for app
     #   ansible.builtin.copy:
