@@ -6,6 +6,7 @@ test-suite:webapp:
   needs:
     - terraform-apply
   script:
+    - apt-get update && apt-get install -y chromium-driver chromium
     - cd test-suite
     - pip install -r requirements.txt
     - export APP_URL=$SERVER_HOST
