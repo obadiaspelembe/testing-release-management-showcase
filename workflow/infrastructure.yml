@@ -88,7 +88,7 @@ ansible-deploy:
     ANSIBLE_HOST_KEY_CHECKING: "False"
   when: manual
   script: 
-    - ansible-playbook -u root --private-key=~/.ssh/id_rsa -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
+    - ansible-playbook -u root -i hosts -e 'ansible_user=root' -e 'ansible_password=$LINODE_PASSWORD' playbook.yml
   
 
 
