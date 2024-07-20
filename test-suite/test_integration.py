@@ -14,10 +14,8 @@ APP_URL = os.environ.get("APP_URL", "http://localhost:3000")
 def driver():
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run in headless mode
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")  # Applicable to Windows OS only
-    chrome_options.add_argument("--window-size=1920x1080")
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
 
     driver = webdriver.Remote(
         command_executor='http://selenium:4444/wd/hub',
