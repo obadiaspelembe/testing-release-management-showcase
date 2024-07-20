@@ -5,14 +5,11 @@ test-suite:webapp:
     - selenium/standalone-chrome
   needs:
     - terraform-apply
-  only:
-    variables:
-      - $BROWSER == 'chrome'
   script:
     - cd test-suite
     - pip install -r requirements.txt
     - export APP_URL=$SERVER_HOST
-    - pytest --browser=$BROWSER --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
+    - pytest --browser=chrome --cov=./ --cov-report xml:coverage.xml --junitxml=report.xml
   artifacts:
     reports:
       junit:
