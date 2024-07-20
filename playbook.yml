@@ -50,18 +50,18 @@
         src: ./api
         dest: /www/var/inspiring-text/api 
 
-    # - name: Build the Docker image app
-    #   command: docker build -t inspiring-text-api /www/var/inspiring-text/api
-    - name: Build Docker image
-      community.docker.docker_image:
-        name: inspiring-text-api
-        source: build
-        path: /www/var/inspiring-text/api
-        dockerfile: /www/var/inspiring-text/api/Dockerfile
-        tag: latest
+    - name: Build the Docker image app
+      command: cd /www/var/inspiring-text/api && ls && docker build -t inspiring-text-api . #/www/var/inspiring-text/api
+    # - name: Build Docker image
+    #   community.docker.docker_image:
+    #     name: inspiring-text-api
+    #     source: build
+    #     path: /www/var/inspiring-text/api
+    #     dockerfile: /www/var/inspiring-text/api/Dockerfile
+    #     tag: latest
 
-    - name: Run the Docker container to display the public SSH key
-      command: docker run -p 8000:8000 --rm inspiring-text-api
+    # - name: Run the Docker container to display the public SSH key
+    #   command: docker run -p 8000:8000 --rm inspiring-text-api
       # register: run_output
 
     # - name: Copy file with owner and permissions for app
