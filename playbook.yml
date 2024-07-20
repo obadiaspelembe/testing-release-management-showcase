@@ -31,9 +31,19 @@
         state: latest
         name: python3-pip
 
-    - name: Install Docker module for Python
-      ansible.builtin.pip:
-        name: docker
+    # - name: Install Docker module for Python
+    #   ansible.builtin.pip:
+    #     name: docker
+
+    - name: Ensure Python venv is present
+      ansible.builtin.command: python3 -m venv /www/var/inspiring-text-venv/
+      args:
+        creates: /path/to/venv
+
+    - name: Install Docker module in venv
+      ansible.builtin.command: /www/var/inspiring-text-venv/bin/pip install docker
+      environment:
+        PATH: "/www/var/inspiring-text-venv/bin:{{ ansible_env.PATH }}"
 
     - name: Copy file with owner and permissions for api
       ansible.builtin.copy:
