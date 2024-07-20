@@ -48,17 +48,15 @@
     - name: Copy file with owner and permissions for api
       ansible.builtin.copy:
         src: ./api
-        dest: /var/www/inspiring-text/api 
+        dest: /var/www/inspiring-text/
 
-    - name: Build the Docker image app
-      command: cd /var/www/inspiring-text/api && ls && docker build -t inspiring-text-api . #/www/var/inspiring-text/api
-    # - name: Build Docker image
-    #   community.docker.docker_image:
-    #     name: inspiring-text-api
-    #     source: build
-    #     path: /www/var/inspiring-text/api
-    #     dockerfile: /www/var/inspiring-text/api/Dockerfile
-    #     tag: latest
+    - name: Build Docker image
+      community.docker.docker_image:
+        name: inspiring-text-api
+        source: build
+        path: /www/var/inspiring-text/api
+        dockerfile: /www/var/inspiring-text/api/Dockerfile
+        tag: latest
 
     # - name: Run the Docker container to display the public SSH key
     #   command: docker run -p 8000:8000 --rm inspiring-text-api
